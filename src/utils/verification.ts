@@ -6,7 +6,7 @@ import type {
   EdgePatterns,
 } from '../types';
 
-const rotateEdges = (edges: EdgePatterns, rotation: number): EdgePatterns => {
+export const rotateEdges = (edges: EdgePatterns, rotation: number): EdgePatterns => {
   const rotations = Math.floor(rotation / 90) % 4;
   const edgeArray = [edges.top, edges.right, edges.bottom, edges.left];
   
@@ -71,11 +71,15 @@ export const checkEdgeMatching = (
 export const checkFragmentPlacement = (
   fragments: TabletFragment[]
 ): { correct: number; total: number; errors: string[] } => {
-  const placedFragments = fragments.filter(f => f.isPlaced && f.currentPosition);
   let correct = 0;
   const errors: string[] = [];
 
-  placedFragments.forEach(f => {
+  fragments.forEach(f => {
+    if (!f.isPlaced || !f.currentPosition) {
+      errors.push(`碎片「${f.name}」尚未放置`);
+      return;
+    }
+    
     const posCorrect = 
       f.currentPosition!.x === f.correctPosition.x &&
       f.currentPosition!.y === f.correctPosition.y;
@@ -100,11 +104,15 @@ export const checkSymbolAssociations = (
   symbols: Symbol[],
   fragments: TabletFragment[]
 ): { correct: number; total: number; errors: string[] } => {
-  const indexedSymbols = symbols.filter(s => s.isIndexed);
   let correct = 0;
   const errors: string[] = [];
 
-  indexedSymbols.forEach(symbol => {
+  symbols.forEach(symbol => {
+    if (!symbol.isIndexed) {
+      errors.push(`符号「${symbol.name}」尚未建立索引`);
+      return;
+    }
+    
     const associatedFragment = fragments.find(f => f.id === symbol.associatedFragmentId);
     if (associatedFragment) {
       if (associatedFragment.symbolIds.includes(symbol.id)) {

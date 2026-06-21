@@ -16,7 +16,6 @@ export default function VerificationModal() {
     showVerification,
     closeVerification,
     submitRestoration,
-    resetWorkspace,
   } = useGameStore();
 
   const [result, setResult] = useState<VerificationResult | null>(null);
@@ -98,7 +97,6 @@ export default function VerificationModal() {
 
   const handleReset = () => {
     closeVerification();
-    resetWorkspace();
   };
 
   const getScoreColor = (score: number): string => {

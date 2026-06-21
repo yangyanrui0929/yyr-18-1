@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useRef } from 'react';
 import { RotateCcw, X, CheckCircle2, XCircle } from 'lucide-react';
 import type { TabletFragment as TabletFragmentType } from '../types';
-import { getRarityColor, getRarityBg } from '../utils/verification';
+import { getRarityColor, getRarityBg, rotateEdges } from '../utils/verification';
 import { useGameStore } from '../store/useGameStore';
 
 interface Props {
@@ -75,12 +75,12 @@ export default function TabletFragment({ fragment, isInLibrary, onDragStart, onD
   const fragmentSymbols = symbols.filter(s => fragment.symbolIds.includes(s.id));
 
   const getBorderColors = () => {
-    const { top, right, bottom, left } = fragment.edgePatterns;
+    const rotatedEdges = rotateEdges(fragment.edgePatterns, rotation);
     return {
-      top: edgePatternStyles[top]?.borderColor || '#666',
-      right: edgePatternStyles[right]?.borderColor || '#666',
-      bottom: edgePatternStyles[bottom]?.borderColor || '#666',
-      left: edgePatternStyles[left]?.borderColor || '#666',
+      top: edgePatternStyles[rotatedEdges.top]?.borderColor || '#666',
+      right: edgePatternStyles[rotatedEdges.right]?.borderColor || '#666',
+      bottom: edgePatternStyles[rotatedEdges.bottom]?.borderColor || '#666',
+      left: edgePatternStyles[rotatedEdges.left]?.borderColor || '#666',
     };
   };
 
